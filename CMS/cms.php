@@ -8,8 +8,15 @@
     var $table;
     var $con;
 
+  /*
+   * Path that holds all the templates for various pages
+   */
     var $template_path = "templates/";
 
+
+   /*
+    * CMS Constructor
+    */
     public function __construct($newHost, $newUserName, $newPassword, $newDatabase){
       $this->host = $newHost;
       $this->username = $newUserName;
@@ -17,11 +24,14 @@
       $this->table = $newDatabase;
     }
 
-
+   /*
+    * Function that renders the page content of the selected ID.
+    * INSECURE:
+    *    Pulls direct PHP from a database, leading to potential manipluation
+    *    of direct HTML page content.
+    */
     public function render($filename){
-      //SELECT bodytext FROM pageTable WHERE id = 2 union select user from users;
       $fetch = "SELECT bodytext FROM pageTable WHERE id = ".$filename.";";
-      //$fetch = "SELECT * FROM pageTable WHERE id = ".$filename.";";
       $result = mysqli_query($this->con, $fetch);
 
 
@@ -32,7 +42,9 @@
       include "templates/footer.php";
     }
 
-
+   /*
+    * Admin page included to add HTML content to the database easier
+    */
     public function display_admin(){
          return <<<ADMIN_FORM
         <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -47,6 +59,9 @@
 ADMIN_FORM;
     }
 
+   /*
+    * Function that writes page content to the database
+    */
     public function write($post){
       var_dump($post);
       if ($post['title'])
@@ -66,6 +81,10 @@ ADMIN_FORM;
       }
     }
 
+
+   /*
+    * Connects to the database
+    */
     public function connect(){
       $this->con = mysqli_connect($this->host, $this->username, $this->password) or die ("Bad connection" . mysqli_error());
       mysqli_select_db($this->con,$this->table) or die ("Bad database".mysqli_error());
@@ -73,6 +92,9 @@ ADMIN_FORM;
       return $this->writeDB($this->con);
     }
 
+   /*
+    * If the Page Table doesn't exist.
+    */
     public function writeDB($con){
       $sql = "
       CREATE TABLE IF NOT EXISTS pageTable(
