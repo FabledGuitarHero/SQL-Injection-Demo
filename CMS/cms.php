@@ -1,5 +1,11 @@
 <?php
 
+ /*
+  *  Vulnerable PHP CMS - handles no sanatizing or validation of input,
+  *  and allows a potentional hacker to exploit HTML content housed
+  *  directly in an SQL Database.
+  */
+
   class cms{
 
     var $host;
@@ -93,7 +99,7 @@ ADMIN_FORM;
     }
 
    /*
-    * If the Page Table doesn't exist.
+    * If the Page Table doesn't exist, creates it.
     */
     public function writeDB($con){
       $sql = "
