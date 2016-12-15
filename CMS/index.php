@@ -13,6 +13,8 @@
   if ($_POST)
     $obj->write($_POST);
 
+
+
   /*
   * Gets page ID and renders appropriate page
   */
